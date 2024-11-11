@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, HttpCode } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
@@ -23,7 +23,7 @@ export class BooksController {
     if(!book){
       throw new NotFoundException('No book with this id!')
     }
-    return book;
+    return book
   }
 
   @Patch(':id')
@@ -32,7 +32,11 @@ export class BooksController {
   }
 
   @Delete(':id')
+  @HttpCode(204)
   remove(@Param('id') id: string) {
-    return this.booksService.remove(+id);
+    if( !this.booksService.remove(+id))
+    {
+throw new NotFoundException('no book with this id')
+    }
   }
 }
